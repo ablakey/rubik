@@ -28,7 +28,7 @@ body {
 #table {
   display: grid;
   min-height: 100%;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: 3fr 1fr;
   gap: 16px;
   padding: 8px;
   width: 100%;
@@ -41,13 +41,9 @@ body {
 
 #bottom-container {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #goal-container {
   height: 100%;
   width: 100%;
-  opacity: 0.5;
 }

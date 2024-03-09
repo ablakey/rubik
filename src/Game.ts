@@ -50,6 +50,8 @@ export class Game {
     layout.forEach((p, idx) => this.board.set(this.board.fromIndex(idx), p));
 
     this.goalLayout = generateLayout().slice(0, 9);
-    this.goalLayout.forEach((p, idx) => this.goalBoard.set(this.board.fromIndex(idx), p));
+    this.goalLayout.forEach((p, idx) => {
+      this.goalBoard.set(this.goalBoard.fromIndex(idx), p);
+    });
   }
 }
