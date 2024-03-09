@@ -23,12 +23,13 @@ export class Game {
   goalLayout!: string[];
 
   constructor() {
-    const frameEl = document.querySelector(".board-container .container .frame") as HTMLDivElement;
+    const frameEl = document.querySelector(".board-container") as HTMLDivElement;
     this.board = new Board(frameEl, this.onClick.bind(this));
-    this.restart();
 
-    const goalEl = document.querySelector(".foobar .frame") as HTMLDivElement;
-    this.board = new Board(goalEl, this.onClick.bind(this));
+    const secondBoard = new Board(frameEl, this.onClick.bind(this));
+    const layout = generateLayout();
+    layout.forEach((p, idx) => secondBoard.set(fromIndex(idx), p));
+    this.restart();
   }
 
   private onClick(coord: Coord, value: string) {

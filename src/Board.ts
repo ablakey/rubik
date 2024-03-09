@@ -33,13 +33,39 @@ export class Board {
   private elements: { cell: HTMLDivElement; text: HTMLDivElement }[] = [];
   private clickEvent?: (coord: Coord, value: string) => void;
 
-  constructor(frameEl: HTMLDivElement, onClick?: (coord: Coord, value: string) => void) {
+  constructor(parentEl: HTMLDivElement, onClick?: (coord: Coord, value: string) => void) {
     this.clickEvent = onClick;
 
-    frameEl.style.aspectRatio = `${WIDTH} / ${HEIGHT}`;
+    const containerEl = document.createElement("div");
+    parentEl.appendChild(containerEl);
+    containerEl.style.cssText = `
+      min-height: 100%;
+      position: relative;
+      `;
 
-    const board = frameEl.children[0] as HTMLDivElement;
-    board.style.gridTemplateColumns = `repeat(${WIDTH}, 1fr)`;
+    const frameEl = document.createElement("div");
+    containerEl.appendChild(frameEl);
+    frameEl.style.cssText = `
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      max-width: 100%;
+      max-height: 100%;
+      container-type: inline-size;
+      aspect-ratio: ${WIDTH} / ${HEIGHT};
+      `;
+
+    const boardEl = document.createElement("div");
+    frameEl.appendChild(boardEl);
+    boardEl.style.cssText = `
+      display: grid;
+      height: 100%;
+      grid-template-columns: repeat(${WIDTH}, 1fr);
+
+    `;
 
     for (let i = 0; i < WIDTH * HEIGHT; i++) {
       const text = document.createElement("div");
@@ -64,7 +90,7 @@ export class Board {
       });
 
       cell.appendChild(text);
-      board.appendChild(cell);
+      boardEl.appendChild(cell);
       this.elements.push({ cell, text });
     }
   }
