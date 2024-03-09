@@ -1,4 +1,4 @@
-import { Board, fromIndex } from "./Board";
+import { Board } from "./Board";
 import { Coord, shuffle } from "./utils";
 
 const Red = "🟥";
@@ -6,7 +6,7 @@ const Yellow = "🟨";
 const Blue = "🟦";
 const White = "⬜";
 const Green = "🟩";
-const Orange = "🟩";
+const Orange = "🟧";
 const Empty = "";
 
 function generateLayout() {
@@ -18,18 +18,27 @@ function generateLayout() {
 
 export class Game {
   private board: Board;
+  private goalBoard: Board;
+
   wins = 0;
   moves = 0;
   goalLayout!: string[];
 
   constructor() {
-    const frameEl = document.querySelector(".board-container") as HTMLDivElement;
-    this.board = new Board(frameEl, this.onClick.bind(this));
+    const gameBoardEl = document.querySelector("#board-container") as HTMLDivElement;
+    const goalBoardEl = document.querySelector("#goal-container") as HTMLDivElement;
+    this.board = new Board(gameBoardEl, {
+      width: 5,
+      height: 5,
+      onClick: this.onClick.bind(this),
+      cellStyle: (coord) => {
+        if (coord[0] === 0 || coord[1] === 0 || coord[0] === 4 || coord[1] === 4) {
+          return "opacity: 0.3;";
+        }
+      },
+    });
 
-    const secondBoard = new Board(frameEl, this.onClick.bind(this));
-    const layout = generateLayout();
-    layout.forEach((p, idx) => secondBoard.set(fromIndex(idx), p));
-    this.restart();
+    this.goalBoard = new Board(goalBoardEl, { width: 3, height: 3 });
   }
 
   private onClick(coord: Coord, value: string) {
@@ -38,8 +47,9 @@ export class Game {
 
   restart() {
     const layout = generateLayout();
-    layout.forEach((p, idx) => this.board.set(fromIndex(idx), p));
+    layout.forEach((p, idx) => this.board.set(this.board.fromIndex(idx), p));
 
-    this.goalLayout = generateLayout();
+    this.goalLayout = generateLayout().slice(0, 9);
+    this.goalLayout.forEach((p, idx) => this.goalBoard.set(this.board.fromIndex(idx), p));
   }
 }

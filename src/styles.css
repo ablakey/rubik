@@ -20,23 +20,34 @@ html {
   background-color: #222222;
 }
 
-.table {
-  display: grid;
-  min-height: 100%;
-  grid-template-rows: max-content 2fr 1fr;
-  gap: 16px;
-  padding: 8px;
-}
-
-.title-container {
+body {
   display: flex;
   justify-content: center;
-  color: white;
-  margin-top: 16px;
 }
 
-.board-container {
-  height: 100%;
+#table {
   display: grid;
-  grid-template-rows: 1fr 2fr;
+  min-height: 100%;
+  grid-template-rows: 2fr 1fr;
+  gap: 16px;
+  padding: 8px;
+  width: 100%;
+  max-width: 800px;
+}
+
+#board-container {
+  height: 100%;
+}
+
+#bottom-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#goal-container {
+  height: 100%;
+  width: 100%;
+  opacity: 0.5;
 }
