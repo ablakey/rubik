@@ -1,0 +1,47 @@
+{
+  "name": "rubik",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel ./src/index.html",
+    "build": "parcel build  ./src/index.html --public-url ./ --no-source-maps"
+  },
+  "author": "Andrew Blakey",
+  "license": "MIT",
+  "prettier": {
+    "printWidth": 100
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "prettier"
+    ],
+    "rules": {
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-angle-bracket-type-assertion": "off",
+      "@typescript-eslint/prefer-interface": "off"
+    }
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "parcel": "^2.10.3",
+    "prettier": "^3.1.1",
+    "process": "^0.11.10",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "async-mutex": "^0.4.1",
+    "ts-essentials": "^9.4.1"
+  }
+}
