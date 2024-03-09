@@ -5,15 +5,16 @@ export function sleep(ms: number) {
 }
 
 export function shuffle<T>(arr: T[]) {
-  let currentIndex = arr.length,
+  const newArr = [...arr];
+  let currentIndex = newArr.length,
     randomIndex;
 
   while (currentIndex > 0) {
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
-    [arr[currentIndex], arr[randomIndex]] = [arr[randomIndex], arr[currentIndex]];
+    [newArr[currentIndex], newArr[randomIndex]] = [newArr[randomIndex], newArr[currentIndex]];
   }
 
-  return arr;
+  return newArr;
 }

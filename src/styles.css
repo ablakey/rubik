@@ -16,13 +16,13 @@
 /* Prevent elastic scrolling on ios */
 html {
   overflow: hidden;
-  background-color: #e6cea0;
+  background-color: #222222;
 }
 
 .table {
   display: grid;
   min-height: 100%;
-  grid-template-rows: max-content 1fr max-content;
+  grid-template-rows: max-content 2fr 1fr;
   gap: 16px;
   padding: 8px;
 }
@@ -30,7 +30,7 @@ html {
 .title-container {
   display: flex;
   justify-content: center;
-  color: black;
+  color: white;
   margin-top: 16px;
 }
 
@@ -38,7 +38,7 @@ html {
   height: 100%;
 }
 
-.controls-container {
+.bottom-container {
   display: flex;
   justify-content: space-around;
   justify-self: center;
@@ -68,7 +68,6 @@ html {
 .board {
   display: grid;
   height: 100%;
-  border: 1cqw solid black;
 }
 
 /* Inspired by https://www.joshwcomeau.com/animation/3d-button/ */

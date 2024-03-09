@@ -1,8 +1,6 @@
 import { assert } from "ts-essentials";
 import { Coord } from "./utils";
 
-export type Cell = [Coord, string];
-
 export type Direction = keyof typeof Direction;
 
 const Direction = {
@@ -15,8 +13,8 @@ const Direction = {
 const WIDTH = 5;
 const HEIGHT = 5;
 const ANIMATION_DURATION = 500;
-const BORDER_COLOUR = "#000000";
-const BG_COLOUR = "#000000";
+const BORDER_COLOUR = "#222222";
+const BG_COLOUR = "#222222";
 const BORDER_WIDTH = 0.2;
 
 const CELL_WIDTH = (1 / WIDTH) * 90;
@@ -33,16 +31,14 @@ export function fromIndex(index: number): Coord {
 
 export class Board {
   private elements: { cell: HTMLDivElement; text: HTMLDivElement }[] = [];
-  private clickEvent?: (cell: Cell) => void;
+  private clickEvent?: (coord: Coord, value: string) => void;
 
-  constructor(onClick?: (cell: Cell) => void) {
+  constructor(frameEl: HTMLDivElement, onClick?: (coord: Coord, value: string) => void) {
     this.clickEvent = onClick;
-    console.log("new");
 
-    const frame = document.querySelector<HTMLDivElement>(".frame")!;
-    frame.style.aspectRatio = `${WIDTH} / ${HEIGHT}`;
+    frameEl.style.aspectRatio = `${WIDTH} / ${HEIGHT}`;
 
-    const board = document.querySelector<HTMLDivElement>(".board")!;
+    const board = frameEl.children[0] as HTMLDivElement;
     board.style.gridTemplateColumns = `repeat(${WIDTH}, 1fr)`;
 
     for (let i = 0; i < WIDTH * HEIGHT; i++) {
@@ -64,7 +60,7 @@ export class Board {
       `;
 
       cell.addEventListener("mouseup", () => {
-        this.clickEvent?.([fromIndex(i), text.textContent ?? ""]);
+        this.clickEvent?.(fromIndex(i), text.textContent ?? "");
       });
 
       cell.appendChild(text);
