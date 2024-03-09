@@ -27,7 +27,7 @@ export class Game {
     this.board = new Board(frameEl, this.onClick.bind(this));
     this.restart();
 
-    const goalEl = document.querySelector(".goal-container .container .frame") as HTMLDivElement;
+    const goalEl = document.querySelector(".foobar .frame") as HTMLDivElement;
     this.board = new Board(goalEl, this.onClick.bind(this));
   }
 

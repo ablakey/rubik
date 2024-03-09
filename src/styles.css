@@ -11,6 +11,7 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   font-family: "Apple", serif;
+  color: white;
 }
 
 /* Prevent elastic scrolling on ios */
@@ -46,6 +47,11 @@ html {
   max-width: 700px;
   align-items: center;
   margin-bottom: 16px;
+}
+
+.bottom-container :first-child {
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
