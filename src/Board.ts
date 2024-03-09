@@ -115,10 +115,28 @@ export class Board {
     return { cell, text };
   }
 
-  public set(coord: Coord, icon: string) {
+  public find(callback: (value: string, coord: Coord) => boolean) {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        const coord: Coord = [x, y];
+        const value = this.get(coord);
+        const isMatch = callback(value, coord);
+        if (isMatch) {
+          return { coord, value };
+        }
+      }
+    }
+  }
+
+  public get(coord: Coord) {
     const { text } = this.getEl(coord);
-    text.style.fontSize = `${this.cellWidth}cqw`;
-    text.textContent = icon;
+    return text.textContent ?? "";
+  }
+
+  public set(coord: Coord, value: string) {
+    const { text } = this.getEl(coord);
+    text.style.fontSize = `${this.cellWidth}cqw`; // TODO: need this?
+    text.textContent = value;
   }
 
   public async move(coord: Coord, direction: Direction) {

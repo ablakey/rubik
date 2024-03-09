@@ -42,7 +42,19 @@ export class Game {
   }
 
   private onClick(coord: Coord, value: string) {
-    console.log(coord, value);
+    // Find the blank on this axis.
+    const empty = this.board.find((v) => v === Empty);
+
+    if (empty === undefined) {
+      return;
+    }
+
+    const deltaX = empty.coord[0] - coord[0];
+    const deltaY = empty.coord[1] - coord[1];
+
+    if (deltaX === 0 || deltaY === 0) {
+      console.log(deltaX, deltaY);
+    }
   }
 
   restart() {
