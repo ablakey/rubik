@@ -83,7 +83,7 @@ export class Board {
         align-items: center;
       `;
 
-      cell.addEventListener("mouseup", async () => {
+      cell.addEventListener("touchstart", async () => {
         if (!this.disableInput) {
           this.disableInput = true;
           await this.clickEvent?.(this.fromIndex(i), text.textContent ?? "");
