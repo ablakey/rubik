@@ -1,5 +1,5 @@
 import { Board } from "./Board";
-import { Coord, shuffle } from "./utils";
+import { Coord, shuffle, sleep } from "./utils";
 
 const Red = "🟥";
 const Yellow = "🟨";
@@ -31,39 +31,134 @@ export class Game {
       width: 5,
       height: 5,
       onClick: this.onClick.bind(this),
-      cellStyle: (coord) => {
-        if (coord[0] === 0 || coord[1] === 0 || coord[0] === 4 || coord[1] === 4) {
-          return "opacity: 0.3;";
-        }
-      },
     });
 
     this.goalBoard = new Board(goalBoardEl, { width: 3, height: 3 });
   }
 
-  private onClick(coord: Coord, value: string) {
-    // Find the blank on this axis.
-    const empty = this.board.find((v) => v === Empty);
+  private async onClick(coord: Coord, value: string) {
+    const empty = this.board.find((v) => v === Empty)!;
 
-    if (empty === undefined) {
+    // Don't move if clicked on empty.
+    if (value === Empty) {
       return;
     }
 
     const deltaX = empty.coord[0] - coord[0];
     const deltaY = empty.coord[1] - coord[1];
+    const count = Math.abs(deltaX + deltaY);
 
-    if (deltaX === 0 || deltaY === 0) {
-      console.log(deltaX, deltaY);
+    const diffX = deltaX === 0 ? 0 : deltaX / Math.abs(deltaX);
+    const diffY = deltaY === 0 ? 0 : deltaY / Math.abs(deltaY);
+
+    // Don't allow diagonals.
+    if (diffX && diffY) {
+      return;
+    }
+
+    const promises = [];
+
+    for (let n = 0; n < count; n++) {
+      const origin: Coord = [empty.coord[0] - diffX * (n + 1), empty.coord[1] - diffY * (n + 1)];
+      const destination: Coord = [origin[0] + diffX, origin[1] + diffY];
+
+      const run = async () => {
+        await this.board.animateMove(origin, [diffX, diffY]);
+        this.board.set(destination, this.board.get(origin));
+        this.board.set(origin, "");
+      };
+      promises.push(run);
+    }
+
+    await Promise.all(promises.map((p) => p()));
+
+    this.highlightMatches();
+
+    this.checkForWin();
+  }
+
+  isMatch(goalCoord: Coord) {
+    const goalValue = this.goalBoard.get(goalCoord);
+    const boardValue = this.board.get([goalCoord[0] + 1, goalCoord[1] + 1]);
+    return goalValue === boardValue;
+  }
+
+  checkForWin() {
+    const matches = this.goalBoard.map((value, coord) => {
+      return value === this.board.get([coord[0] + 1, coord[1] + 1]);
+    });
+
+    if (matches.every((v) => v)) {
+      this.winGame();
     }
   }
 
-  restart() {
-    const layout = generateLayout();
-    layout.forEach((p, idx) => this.board.set(this.board.fromIndex(idx), p));
-
-    this.goalLayout = generateLayout().slice(0, 9);
-    this.goalLayout.forEach((p, idx) => {
-      this.goalBoard.set(this.goalBoard.fromIndex(idx), p);
+  highlightMatches() {
+    this.goalBoard.forEach((_, coord) => {
+      this.board.set([coord[0] + 1, coord[1] + 1], undefined, {
+        opacity: this.isMatch(coord) ? "1.0" : "0.4",
+      });
     });
+  }
+
+  async clearBoard() {
+    const promises: (() => Promise<void>)[] = [];
+
+    this.board.forEach((_, __, idx) => {
+      promises.push(async () => {
+        const coord = this.board.fromIndex(idx);
+        await sleep(50 * idx);
+        await this.board.animateHide(coord, { duration: 250 });
+        this.board.set(coord, "");
+      });
+    });
+
+    await Promise.all(promises.map((p) => p()));
+  }
+
+  async clearGoalBoard() {
+    const promises: (() => Promise<void>)[] = [];
+
+    this.goalBoard.forEach((_, __, idx) => {
+      promises.push(async () => {
+        const coord = this.goalBoard.fromIndex(idx);
+        await sleep(50 * idx);
+        await this.goalBoard.animateHide(coord, { duration: 250 });
+        this.goalBoard.set(coord, "");
+      });
+    });
+
+    await Promise.all(promises.map((p) => p()));
+  }
+
+  async winGame() {
+    this.board.disableInput = true;
+    await this.clearBoard();
+    await this.clearGoalBoard();
+    await sleep(1000);
+    this.restart();
+    this.board.disableInput = false;
+  }
+
+  restart() {
+    // Generate goal.
+    generateLayout()
+      .filter((n) => n !== "")
+      .slice(0, 9)
+      .forEach((value, idx) => {
+        const coord = this.goalBoard.fromIndex(idx);
+        this.goalBoard.animateShow(coord, value);
+        this.goalBoard.set(coord, value);
+      });
+
+    // Randomize board.
+    const layout = generateLayout();
+    layout.forEach((value, idx) => {
+      const coord = this.board.fromIndex(idx);
+      this.board.animateShow(coord, value);
+      this.board.set(coord, value, { opacity: "0.4" });
+    });
+
+    this.highlightMatches();
   }
 }
