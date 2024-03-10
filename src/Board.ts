@@ -83,12 +83,14 @@ export class Board {
         align-items: center;
       `;
 
-      cell.addEventListener("touchstart", async () => {
-        if (!this.disableInput) {
-          this.disableInput = true;
-          await this.clickEvent?.(this.fromIndex(i), text.textContent ?? "");
-          this.disableInput = false;
-        }
+      ["touchstart", "click"].forEach((e) => {
+        cell.addEventListener(e, async () => {
+          if (!this.disableInput) {
+            this.disableInput = true;
+            await this.clickEvent?.(this.fromIndex(i), text.textContent ?? "");
+            this.disableInput = false;
+          }
+        });
       });
 
       cell.appendChild(text);

@@ -9,6 +9,8 @@ const Green = "🟩";
 const Orange = "🟧";
 const Empty = "";
 
+const OPACITY_DIM = "0.5";
+
 function generateLayout() {
   return shuffle([
     ...[Red, Yellow, Blue, White, Green, Orange].map((p) => [p, p, p, p]).flat(),
@@ -96,7 +98,7 @@ export class Game {
   highlightMatches() {
     this.goalBoard.forEach((_, coord) => {
       this.board.set([coord[0] + 1, coord[1] + 1], undefined, {
-        opacity: this.isMatch(coord) ? "1.0" : "0.4",
+        opacity: this.isMatch(coord) ? "1.0" : OPACITY_DIM,
       });
     });
   }
@@ -156,7 +158,7 @@ export class Game {
     layout.forEach((value, idx) => {
       const coord = this.board.fromIndex(idx);
       this.board.animateShow(coord, value);
-      this.board.set(coord, value, { opacity: "0.4" });
+      this.board.set(coord, value, { opacity: OPACITY_DIM });
     });
 
     this.highlightMatches();
